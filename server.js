@@ -14,6 +14,18 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Set HTTP headers for security
+app.use((req, res, next) => {
+  // Only allow your site to be loaded in an iframe on your own pages (SAMEORIGIN)
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+
+  // Set Content-Security-Policy to restrict iframe embedding
+  res.setHeader('Content-Security-Policy', "frame-ancestors 'self'");
+
+  // Continue processing the request
+  next();
+});
+
 // Connect to DB
 mongoose.connect(process.env.DB, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connected to MongoDB'))
