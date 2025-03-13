@@ -16,13 +16,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Set HTTP headers for security
 app.use((req, res, next) => {
-  // Only allow your site to be loaded in an iframe on your own pages (SAMEORIGIN)
+  // Only allow your site to be loaded in an iframe on your own pages
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
-
+  
   // Set Content-Security-Policy to restrict iframe embedding
   res.setHeader('Content-Security-Policy', "frame-ancestors 'self'");
 
-  // Continue processing the request
+  // Disable DNS prefetching
+  res.setHeader('X-DNS-Prefetch-Control', 'off');
+  
+  // Only allow your site to send the referrer for your own pages
+  res.setHeader('Referrer-Policy', 'same-origin');
+  
   next();
 });
 
